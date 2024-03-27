@@ -21,8 +21,10 @@ mongoose.connect(MONGO_URI, {
 
 const server = new ApolloServer({ schema: buildSubgraphSchema({ typeDefs, resolvers }) });
 
-startStandaloneServer(server, {
-  listen: 4002,
-}).then(({ url }) => {
+async function start2() {
+  const { url } = await startStandaloneServer(server, {
+    listen: 4002,
+  })
   console.log(`servr run on ${url}`)
-})
+}
+start2()

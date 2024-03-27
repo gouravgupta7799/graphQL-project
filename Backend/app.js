@@ -24,12 +24,14 @@ mongoose.connect(MONGO_URI, {
 const server = new ApolloServer({ schema: buildSubgraphSchema({ typeDefs, resolvers }) });
 
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req, res }) => {
-    await auths(req)
-  }
-}).then(({ url }) => {
+async function start3() {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+    context: async ({ req, res }) => {
+      await auths(req)
+    }
+  })
   console.log(`Server ready at ${url}`);
-});
+}
 
+start3()
