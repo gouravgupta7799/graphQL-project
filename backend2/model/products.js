@@ -10,7 +10,8 @@ const productSchema = new schema({
   discount: String,
   offer: String,
   gender: String,
-  stock: Number
+  stock: Number,
+  userId: String,
 })
 
 module.exports = mongoose.model('Product', productSchema);

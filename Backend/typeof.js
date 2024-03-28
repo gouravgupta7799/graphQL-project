@@ -10,8 +10,8 @@ extend schema
     users: [User] #return array of users
     user(id: ID): User #return users by id
   }
-  type User {
-    id: String
+  type User @key(fields:"id"){
+    id: ID
     firstName: String
     lastName: String
     email:String
@@ -19,6 +19,12 @@ extend schema
     age: Int
     token:String
   }
+  type Product @key(fields : "id userId"){
+    id : ID!
+    userId : ID!
+    user : User 
+  }
+
   type Mutation {
     signup(firstName: String, lastName: String, email:String, password:String, age: Int): User
     login(email:String, password:String): User

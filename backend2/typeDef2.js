@@ -13,8 +13,13 @@ extend schema
     Product(id:ID): Product #return single product
   }
 
-  type Product {
-    id : String
+  type User @key(fields : "id") {
+    id : ID! 
+    products : [Product]!
+  }
+
+  type Product @key(fields:"id userId") {
+    id : ID
     productName : String
     price : Int
     details : String
@@ -23,10 +28,11 @@ extend schema
     offer:String
     gender:String
     stock:Int
+    userId:ID
   }
 
   type Mutation {
-    addProduct(productName:String, details:String, price:Int, imageUrl:String, discount:String, offer:String, gender:String, stock:Int): Product  
+    addProduct(productName:String, details:String, price:Int, imageUrl:String, discount:String, offer:String, gender:String, stock:Int, userId:ID): Product  
   }
 `
 

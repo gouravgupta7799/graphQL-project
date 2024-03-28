@@ -86,6 +86,23 @@ const resolvers = {
       }
 
     },
+    User: {
+      __resolveReference(user, { User }) {
+        return User.findById(user.id);
+      },
+    },
+
+    Product: {
+      async user(parent) {
+        try {
+          let findUser = await User.findById(parent.id);
+          return findUser;
+        } catch (error) {
+          console.log(error);
+          return error
+        }
+      }
+    }
   },
 };
 

@@ -6,7 +6,7 @@ const { ApolloServerPluginSubscriptionCallback } = require('@apollo/server/plugi
 
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: 'User', url: "http://localhost:4000" },
+    { name: 'User', url: "http://localhost:4001" },
     { name: 'Product', url: "http://localhost:4002" }
   ]
 })
@@ -19,9 +19,10 @@ async function start() {
     plugins: [ApolloServerPluginSubscriptionCallback()],
   })
   const { url } = await startStandaloneServer(server, {
-    listen: 4001,
+    listen: 4000,
   })
   console.log(`servr run on ${url}`)
 }
 
 start()
+
