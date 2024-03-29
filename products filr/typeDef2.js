@@ -3,11 +3,7 @@
 const gql = require('graphql-tag');
 
 const typeDefs = gql`
-
-extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.5",
-        import: ["@key"])
-        
+  
   type Query {
     products: [Product] #retrun product list
     Product(id:ID): Product #return single product

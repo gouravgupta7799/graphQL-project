@@ -4,13 +4,13 @@ const Product = require('./model/products');
 const resolvers = {
 
   Query: {
-    products: async () => await Product.find({}),
-    Product: async (parent, args) => await Product.findById(args.id)
+    products: async () => await Product.findAll(),
+    Product: async (parent, args) => await Product.findByPk(args.id)
   },
   Mutation: {
     addProduct: async (parent, args) => {
       console.log(parent, args)
-      const prod = Product({
+      const prod = await Product.create({
         productName: args.productName,
         price: args.price,
         details: args.details,
@@ -22,19 +22,19 @@ const resolvers = {
         userId: args.userId,
 
       })
-      return prod.save()
+      return prod;
     }
   },
   Product: {
     __resolveReference(product, { Product }) {
-      return Product.findById(product.id);
+      return Product.findByPk(product.id);
     },
   },
 
   User: {
     async products(parent) {
       try {
-        let findProduct = await Product.find({ userId: parent.id })
+        let findProduct = await Product.findAll({ Where: { userId: parent.id } })
         return findProduct
       } catch (error) {
         console.log(error)

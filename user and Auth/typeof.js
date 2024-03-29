@@ -1,11 +1,6 @@
 const gql = require("graphql-tag");
 
 const typeDefs = gql`
-
-extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.5",
-        import: ["@key"])
-        
   type Query {
     users: [User] #return array of users
     user(id: ID): User #return users by id

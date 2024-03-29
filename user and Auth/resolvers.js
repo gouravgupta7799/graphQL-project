@@ -1,12 +1,12 @@
-const { User } = require("./model/user.js");
+const User = require("./model/user.js");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const resolvers = {
 
   Query: {
-    users: async () => await User.find({}),
-    user: async (parent, args) => await User.findById(args.id),
+    users: async () => await User.findAll(),
+    user: async (parent, args) => await User.findByPk(args.id),
   },
   Mutation: {
     signup: async (parent, args) => {
@@ -17,29 +17,27 @@ const resolvers = {
         if (checkEmail.trim().length <= 0 || passCode.trim().length <= 0) {
           console.log('invalid email or password')
         }
-        const foundEmail = await User.findOne({ email: checkEmail })
-
+        const foundEmail = await User.findOne({ where: { email: checkEmail } })
         if (foundEmail) {
           console.log('user alredy exixt email found')
         }
         else {
 
-          const newUser = new User({
+          const newUser = await User.create({
             firstName: args.firstName,
             lastName: args.lastName,
             email: args.email,
             password: passCode,
             age: args.age,
           });
-          const user = await newUser.save();
 
           const salt = 5;
           bcrypt.hash(passCode, salt, async (err, hash) => {
-            user.password = hash
-            await user.save()
+            newUser.password = hash
+            await newUser.save()
           })
-          jwtFunctionCall(user._id, user)
-          return user;
+          jwtFunctionCall(newUser.id, newUser)
+          return newUser;
         }
       }
 
@@ -57,7 +55,7 @@ const resolvers = {
         if (checkEmail.trim().length <= 0 || passCode.trim().length <= 0) {
           console.log({ error: 'invalid email or password' })
         }
-        const foundEmail = await User.findOne({ email: checkEmail })
+        const foundEmail = await User.findOne({ where: { email: checkEmail } })
 
         if (!foundEmail) {
           console.log({ error: 'user not found' });
@@ -68,7 +66,7 @@ const resolvers = {
 
             .then(async (pass, err) => {
               if (pass) {
-                jwtFunctionCall(foundEmail._id, foundEmail)
+                jwtFunctionCall(foundEmail.id, foundEmail)
                 return foundEmail;
               } else {
                 console.log({ message: 'invalid password' });
@@ -89,7 +87,7 @@ const resolvers = {
     User: {
       __resolveReference(user, { User }) {
         console.log(user, '>1111>>', User)
-        return User.findById(user.id);
+        return User.findByPk(user.id);
       },
     },
   },

@@ -1,28 +1,40 @@
+require('dotenv').config()
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
-const mongoose = require("mongoose");
+// const { expressMiddleware } = require('@apollo/server/express4')
 const { resolvers } = require("./resolvers.js");
 const { typeDefs } = require("./typeof.js");
 const { buildSubgraphSchema } = require('@apollo/subgraph')
-const MONGO_URI = "mongodb://127.0.0.1:27017/new-project-part1";
 require('dotenv').config()
 const { auths } = require('./auth.js')
+const sequelize = require('./utill/databse.js');
+const fs = require('fs');
+const express = require('express');
+const app = express();
+const cors = require('cors');
 
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log(`Db Connected`);
-  })
-  .catch(err => {
-    console.log(err.message);
-  });
+const userEndpoint = '/s2s-schema';
 
 
-const server = new ApolloServer({ schema: buildSubgraphSchema({ typeDefs, resolvers }) });
+exports.userSchema = app.get(userEndpoint, (req, res) => {
+  const file = fs.readFileSync('s2suser.graphql');
+  res.type('application/txt');
+  res.charset = 'UTF-8';
+  res.write(file);
+  res.end();
+});
 
+const server = new ApolloServer({
+  schema: buildSubgraphSchema({ typeDefs, resolvers }),
+
+});
+
+
+sequelize
+  // .sync({ force: true })
+  .sync()
+  .catch(err => console.log(err))
 
 async function start1() {
   const { url } = await startStandaloneServer(server, {
@@ -32,6 +44,18 @@ async function start1() {
     }
   })
   console.log(`Server ready at ${url}`);
+  // await server.start();
+  // app.use(
+  //   "/graphql",
+  //   cors(),
+  //   express.json(),
+  //   expressMiddleware(server, {
+  //     context: auths,
+  //   })
+  // );
+  // app.listen(3001, async () => {
+  //   console.log(`Server listening on port ${3001}`);
+  // });
 }
 
 start1()
