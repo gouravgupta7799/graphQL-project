@@ -88,26 +88,15 @@ const resolvers = {
     },
     User: {
       __resolveReference(user, { User }) {
+        console.log(user, '>1111>>', User)
         return User.findById(user.id);
       },
     },
-
-    Product: {
-      async user(parent) {
-        try {
-          let findUser = await User.findById(parent.id);
-          return findUser;
-        } catch (error) {
-          console.log(error);
-          return error
-        }
-      }
-    }
   },
 };
 
 async function jwtFunctionCall(id, foundEmail) {
-  console.log(id, foundEmail)
+  // console.log(id,'>>>>', foundEmail)
   token = jwt.sign({ id: id }, process.env.JWTPasscode)
   foundEmail.token = token;
   await foundEmail.save()

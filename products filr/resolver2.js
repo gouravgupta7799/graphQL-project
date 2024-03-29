@@ -9,7 +9,7 @@ const resolvers = {
   },
   Mutation: {
     addProduct: async (parent, args) => {
-
+      console.log(parent, args)
       const prod = Product({
         productName: args.productName,
         price: args.price,
@@ -34,8 +34,7 @@ const resolvers = {
   User: {
     async products(parent) {
       try {
-        console.log(parent)
-        let findProduct = await Product.findAll({ where: { userId: parent.id } })
+        let findProduct = await Product.find({ userId: parent.id })
         return findProduct
       } catch (error) {
         console.log(error)

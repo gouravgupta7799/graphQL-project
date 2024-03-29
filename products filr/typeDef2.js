@@ -16,6 +16,7 @@ extend schema
   type User @key(fields : "id") {
     id : ID! 
     products : [Product]!
+
   }
 
   type Product @key(fields:"id userId") {

@@ -19,11 +19,6 @@ extend schema
     age: Int
     token:String
   }
-  type Product @key(fields : "id userId"){
-    id : ID!
-    userId : ID!
-    user : User 
-  }
 
   type Mutation {
     signup(firstName: String, lastName: String, email:String, password:String, age: Int): User

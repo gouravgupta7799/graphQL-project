@@ -7,8 +7,8 @@ const resolvers = {
   Query: {
     courseDetails: async () => { },
     oneCourse: async () => { },
-    students: async () => { },
-    student: async () => { },
+    students: async () => await Student.findAll(),
+    student: async (parant, args) => await Student.findByPk(args.id),
   },
 
   Mutation: {
@@ -18,26 +18,25 @@ const resolvers = {
 
     newStudent: async (parent, args) => {
       try {
-        const { studentName, studentEmail, studentContect } = args;
-        // console.log(studentName, studentEmail, studentContect)
-        // let alreadyexist = await Student.findOne({ where: { studentEmail: studentEmail } });
-        console.log(studentEmail)
-        const alreadyexist = await Student.findAll({ where: { studentEmail } })
-        console.log('>>>>', alreadyexist)
-        if (alreadyexist) {
+        const { name, email, contect } = args;
+        const alreadyexist = await Student.findOne({ where: { email } })
 
-          throw new error({ msg: 'User already exist' });
+        if (alreadyexist) {
+          console.log('User already exist')
+          throw new error({ message: 'User already exist' });
         }
-        if (studentName && studentEmail && studentContect) {
+        console.log(name ,email , contect)
+        if (name && email && contect) {
 
           const student = await Student.create({
-            studentName: studentName,
-            studentContect: studentContect ,
-            studentEmail: studentEmail 
+            name: name,
+            contect: contect,
+            email: email
           })
           return student;
-        } else {
 
+        } else {
+          throw new error({ message: 'some feilds are not filled try after rechecking' })
         }
       }
       catch (error) {

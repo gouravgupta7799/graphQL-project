@@ -8,15 +8,15 @@ const Student = sequelize.define('student', {
     primaryKey: true,
     autoIncrement: true
   },
-  studentName: {
+  name: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  studentContect: {
+  contect: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  studentEmail: {
+  email: {
     type: Sequelize.STRING,
     Unique: true,
     allowNull: false

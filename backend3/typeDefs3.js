@@ -11,26 +11,26 @@ extend schema
     courseDetails:[Course]
     oneCourse(id:ID):Course
     students:[Student]
-    student(id:ID):Student
+    student(Id:ID):Student
   }
 
   type Course {
-    id:ID
+    Id:ID
     name: String,
     details: String,
     price: Int,
   }
 
   type Student {
-    id: ID
-    studentName: String
-    studentContect:String
-    studentEmail:String
+    Id: ID
+    name: String
+    contect:String
+    email:String
   }
 
   type Mutation{
     addCourse(name:String, details:String, price:Int):Course
-    newStudent(studentName:String, studentContect:String, studentEmail:String):Student
+    newStudent(name:String, contect:String, email:String):Student
   }
 `
 
