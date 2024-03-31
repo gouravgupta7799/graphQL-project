@@ -1,0 +1,86 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.2", for: EXECUTION)
+{
+  query: Query
+  mutation: Mutation
+}
+
+directive @join__field(graph: join__Graph!, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+scalar join__FieldSet
+
+enum join__Graph {
+  S2S_LF @join__graph(name: "s2s-lf", url: "http://localhost:3001/")
+  S3S_LF @join__graph(name: "s3s-lf", url: "http://localhost:4002/")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Mutation
+  @join__type(graph: S2S_LF)
+  @join__type(graph: S3S_LF)
+{
+  signup(firstName: String, lastName: String, email: String, password: String, age: Int): User @join__field(graph: S2S_LF)
+  login(email: String, password: String): User @join__field(graph: S2S_LF)
+  addProduct(productName: String, details: String, price: Int, imageUrl: String, discount: String, offer: String, gender: String, stock: Int, userId: ID): Product @join__field(graph: S3S_LF)
+}
+
+type Product
+  @join__type(graph: S3S_LF, key: "id userId")
+{
+  id: ID
+  productName: String
+  price: Int
+  details: String
+  imageUrl: String
+  discount: String
+  offer: String
+  gender: String
+  stock: Int
+  userId: ID
+}
+
+type Query
+  @join__type(graph: S2S_LF)
+  @join__type(graph: S3S_LF)
+{
+  users: [User] @join__field(graph: S2S_LF)
+  user(id: ID): User @join__field(graph: S2S_LF)
+  products: [Product] @join__field(graph: S3S_LF)
+  Product(id: ID): Product @join__field(graph: S3S_LF)
+}
+
+type User
+  @join__type(graph: S2S_LF, key: "id")
+  @join__type(graph: S3S_LF, key: "id")
+{
+  id: ID @join__field(graph: S2S_LF, type: "ID") @join__field(graph: S3S_LF, type: "ID!")
+  firstName: String @join__field(graph: S2S_LF)
+  lastName: String @join__field(graph: S2S_LF)
+  email: String @join__field(graph: S2S_LF)
+  password: String @join__field(graph: S2S_LF)
+  age: Int @join__field(graph: S2S_LF)
+  token: String @join__field(graph: S2S_LF)
+  products: [Product]! @join__field(graph: S3S_LF)
+}

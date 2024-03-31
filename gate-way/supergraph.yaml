@@ -1,0 +1,10 @@
+federation_version: =2.0.0
+subgraphs:
+  s2s-lf:
+    routing_url: http://localhost:3001/
+    schema:
+      subgraph_url: http://localhost:4001/graphql/s2sschema
+  s3s-lf:
+    routing_url: http://localhost:4002/
+    schema:
+      subgraph_url: http://localhost:4002/graphql/s3sschema
