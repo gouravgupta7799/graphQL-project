@@ -19,7 +19,7 @@ directive @link(url: String, as: String, for: link__Purpose, import: [link__Impo
 scalar join__FieldSet
 
 enum join__Graph {
-  S2S_LF @join__graph(name: "s2s-lf", url: "http://localhost:3001/")
+  S2S_LF @join__graph(name: "s2s-lf", url: "http://localhost:4001/")
   S3S_LF @join__graph(name: "s3s-lf", url: "http://localhost:4002/")
 }
 

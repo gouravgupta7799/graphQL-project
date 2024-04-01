@@ -1,0 +1,47 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+scalar _FieldSet
+scalar _Any
+type Query {
+  products: [Product]
+  Product(id: ID): Product
+  _entities(representations: [_Any!]!): [_Entity]!
+  _service: _Service!
+}
+type User {
+  id: ID!
+  products: [Product]!
+}
+type Product {
+  id: ID
+  productName: String
+  price: Int
+  details: String
+  imageUrl: String
+  discount: String
+  offer: String
+  gender: String
+  stock: Int
+  userId: ID
+}
+type Mutation {
+  addProduct(productName: String, details: String, price: Int, imageUrl: String, discount: String, offer: String, gender: String, stock: Int, userId: ID): Product
+}
+type _Service {
+  sdl: String
+}
+union _Entity = Product | User
+directive @key(fields: _FieldSet!, resolvable: Boolean = true) on OBJECT | INTERFACE
+directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+directive @external(reason: String) on OBJECT | FIELD_DEFINITION
+directive @tag(name: String!) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+directive @extends on OBJECT | INTERFACE
+"Exposes a URL that specifies the behavior of this scalar."
+directive @specifiedBy(
+    "The URL that specifies the behavior of this scalar."
+    url: String!
+  ) on SCALAR
+

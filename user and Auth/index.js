@@ -30,7 +30,6 @@ const server = new ApolloServer({
 
 });
 
-
 sequelize
   // .sync({ force: true })
   .sync()
@@ -40,6 +39,7 @@ async function start1() {
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4001 },
     context: async ({ req, res }) => {
+      if(req.auth)
       await auths(req)
     }
   })
